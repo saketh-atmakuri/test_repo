@@ -54,6 +54,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    
+    - name: set date and time
+      id: vars
+      run: echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v3.5.0
@@ -69,7 +73,11 @@ jobs:
       with:
         path: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/go-port:${{github.run_id}}
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/go-port:${{github.run_id}}
+          ${{ secrets.DOCKER_USERNAME }}/go-port:latest
+          ${{ secrets.DOCKER_USERNAME }}/go-port:${{github.sha}}
+          ${{ secrets.DOCKER_USERNAME }}/go-port:${{env.IMAGE_TAG}}
 
   Image-Scanning:
       runs-on: ubuntu-latest
@@ -141,3 +149,7 @@ jobs:
   #         channel: '#go-app-github-actions'
   #       if: always()
 
+# docker login
+# docker login -u cloudhawk9
+# token
+# dckr_pat_x33upbKE1IOLBjj6-JBX-1XwsKs
