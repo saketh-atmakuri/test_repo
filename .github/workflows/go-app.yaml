@@ -148,8 +148,3 @@ jobs:
   #         steps: ${{ toJson(steps) }}
   #         channel: '#go-app-github-actions'
   #       if: always()
-
-# docker login
-# docker login -u cloudhawk9
-# token
-# dckr_pat_x33upbKE1IOLBjj6-JBX-1XwsKs
