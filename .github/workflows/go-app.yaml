@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - test_img
     paths-ignore:
       - 'README.md'
 
 env: 
   REGISTRY: docker.io
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
 
@@ -96,48 +96,48 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
-  Updating-helm-tags:
-      needs: Image-Scanning
+  # Updating-helm-tags:
+  #     needs: Image-Scanning
       
-      runs-on: ubuntu-latest
-      steps:
+  #     runs-on: ubuntu-latest
+  #     steps:
       
-      - name: Cloning the helm repo
-        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
-        with:
-          owner: 'AmanPathak-DevOps'
-          repository: 'go-app-devops'
-          access-token: ${{ secrets.REPO_PAT }}
-          branch: 'master'
+  #     - name: Cloning the helm repo
+  #       uses: GuillaumeFalourd/clone-github-repo-action@v2.3
+  #       with:
+  #         owner: 'AmanPathak-DevOps'
+  #         repository: 'go-app-devops'
+  #         access-token: ${{ secrets.REPO_PAT }}
+  #         branch: 'master'
 
 
-      - name: Updating values in helm
-        run: |
-          cd go-app-devops
-          ls
-          sed -i 's/tag: .*/tag: "${{github.run_id}}"/' values.yaml
+  #     - name: Updating values in helm
+  #       run: |
+  #         cd go-app-devops
+  #         ls
+  #         sed -i 's/tag: .*/tag: "${{github.run_id}}"/' values.yaml
 
-      - name: Pushing changes
-        run: |
-          cd go-app-devops
-          git config --global user.email "aman07pathak@gmail.com"
-          git config --global user.name "AmanPathak-DevOps"
-          git add values.yaml
-          git commit -am "Updated values.yaml file"
-          git push
+  #     - name: Pushing changes
+  #       run: |
+  #         cd go-app-devops
+  #         git config --global user.email "aman07pathak@gmail.com"
+  #         git config --global user.name "AmanPathak-DevOps"
+  #         git add values.yaml
+  #         git commit -am "Updated values.yaml file"
+  #         git push
 
       
-  Slack-Notification:
+  # Slack-Notification:
 
-      runs-on: ubuntu-latest
-      needs: [build, Code-Quality, Docker-Image-Push, Image-Scanning, Updating-helm-tags]
-      steps:
+  #     runs-on: ubuntu-latest
+  #     needs: [build, Code-Quality, Docker-Image-Push, Image-Scanning, Updating-helm-tags]
+  #     steps:
       
-      - name: Slack Notification
-        uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#go-app-github-actions'
-        if: always()
+  #     - name: Slack Notification
+  #       uses: act10ns/slack@v1
+  #       with:
+  #         status: ${{ job.status }}
+  #         steps: ${{ toJson(steps) }}
+  #         channel: '#go-app-github-actions'
+  #       if: always()
 
