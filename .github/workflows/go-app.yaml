@@ -74,9 +74,6 @@ jobs:
         path: ./Dockerfile
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/go-port:${{github.run_id}}
-          ${{ secrets.DOCKER_USERNAME }}/go-port:latest
-          ${{ secrets.DOCKER_USERNAME }}/go-port:${{github.sha}}
           ${{ secrets.DOCKER_USERNAME }}/go-port:${{env.IMAGE_TAG}}
 
   Image-Scanning:
