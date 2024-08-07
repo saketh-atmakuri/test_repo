@@ -1,104 +1,104 @@
-name: CI/CD
+# name: CI/CD
 
-on: 
-  workflow_dispatch:
-  push:
-    branches:
-      - test_img
-    paths-ignore:
-      - 'README.md'
+# on: 
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - test_img
+#     paths-ignore:
+#       - 'README.md'
 
-env: 
-  REGISTRY: docker.io
-  # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+# env: 
+#   REGISTRY: docker.io
+#   # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-jobs:
+# jobs:
 
-  build: 
-    runs-on: ubuntu-latest
+#   build: 
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4.1.7
 
-    - name: Setting Up Go 1.22
-      uses: actions/setup-go@v2
-      with: 
-        go-version: 1.22
+#     - name: Setting Up Go 1.22
+#       uses: actions/setup-go@v2
+#       with: 
+#         go-version: 1.22
 
-    - name: Build 
-      run: go build -o go-app
+#     - name: Build 
+#       run: go build -o go-app
 
-    - name: Test
-      run: go test ./
+#     - name: Test
+#       run: go test ./
 
 
-  Code-Quality:
-    runs-on: ubuntu-latest
-    needs: build
+#   Code-Quality:
+#     runs-on: ubuntu-latest
+#     needs: build
     
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
 
-    - name: Run golang-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: v1.56.2
+#     - name: Run golang-lint
+#       uses: golangci/golangci-lint-action@v6
+#       with:
+#         version: v1.56.2
         
-  Docker-Image-Push: 
-    runs-on: ubuntu-latest
+#   Docker-Image-Push: 
+#     runs-on: ubuntu-latest
 
-    needs: Code-Quality
+#     needs: Code-Quality
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
     
-    - name: set date and time
-      id: vars
-      run: echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+#     - name: set date and time
+#       id: vars
+#       run: echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3.5.0
+#     - name: Setup Docker Buildx
+#       uses: docker/setup-buildx-action@v3.5.0
 
-    - name: Login to Dockerhub
-      uses: docker/login-action@v3
-      with: 
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+#     - name: Login to Dockerhub
+#       uses: docker/login-action@v3
+#       with: 
+#         username: ${{ secrets.DOCKER_USERNAME }}
+#         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v6.5.0
-      with:
-        path: ./Dockerfile
-        push: true
-        tags: |
-          ${{ secrets.DOCKER_USERNAME }}/go-port:${{env.IMAGE_TAG}}
+#     - name: Build and push
+#       uses: docker/build-push-action@v6.5.0
+#       with:
+#         path: ./Dockerfile
+#         push: true
+#         tags: |
+#           ${{ secrets.DOCKER_USERNAME }}/go-port:${{env.IMAGE_TAG}}
 
-  Image-Scanning:
-      runs-on: ubuntu-latest
-      needs: Docker-Image-Push
+#   Image-Scanning:
+#       runs-on: ubuntu-latest
+#       needs: Docker-Image-Push
       
-      steps:
+#       steps:
       
-      - name: Login to Dockerhub
-        uses: docker/login-action@v3
-        with: 
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Login to Dockerhub
+#         uses: docker/login-action@v3
+#         with: 
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
         
-      - name: Docker Scout
-        id: docker-scout
-        uses: docker/scout-action@v1
-        with:
-          command: cves,recommendations
-          image: ${{ steps.meta.outputs.tags }}
-          #to: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.COMPARE_TAG }}
-          ignore-unchanged: true
-          only-severities: critical,high
-          write-comment: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Docker Scout
+#         id: docker-scout
+#         uses: docker/scout-action@v1
+#         with:
+#           command: cves,recommendations
+#           image: ${{ steps.meta.outputs.tags }}
+#           #to: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.COMPARE_TAG }}
+#           ignore-unchanged: true
+#           only-severities: critical,high
+#           write-comment: true
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
   # Updating-helm-tags:
