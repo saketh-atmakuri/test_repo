@@ -11,8 +11,6 @@ env:
 
 phases:
   install:
-    runtime-versions:
-      dokcer: 19
     commands:
       - echo Installing Helm...
       - curl -LO https://get.helm.sh/helm-v3.11.2-linux-amd64.tar.gz
