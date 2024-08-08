@@ -52,7 +52,7 @@ phases:
       - docker push $IMAGE_REPO_NAME:latest
       - echo Updating Kubernetes deployment with Helm...
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      - cat /root/.kube/config
+      - aws sts get-caller-identity
       - kubectl get pods -A
       - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       # testing for ecr pipeline
