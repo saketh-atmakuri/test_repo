@@ -17,6 +17,13 @@ phases:
       - tar -zxvf helm-v3.11.2-linux-amd64.tar.gz
       - mv linux-amd64/helm /usr/local/bin/helm
       - helm version
+      - echo Installing Kubectl..................
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.11/2024-07-12/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+      - echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+      - sudo snap install kubectl --classic
+      - echo 'Kubectl Installation was done'
 
   pre_build:
     commands:
