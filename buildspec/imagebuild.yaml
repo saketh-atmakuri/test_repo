@@ -22,6 +22,7 @@ phases:
       - chmod +x ./kubectl
       - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
       - echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+      - kubectl version --client 
       # - sudo snap install kubectl --classic
       - echo 'Kubectl Installation was done'
 
@@ -51,6 +52,7 @@ phases:
       - docker push $IMAGE_REPO_NAME:latest
       - echo Updating Kubernetes deployment with Helm...
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+      - cat /root/.kube/config
       - kubectl get pods -A
       - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       # testing for ecr pipeline
