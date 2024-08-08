@@ -7,7 +7,7 @@ env:
     AWS_ACCOUNT_ID: "992382675927"
     EKS_CLUSTER_NAME: "saketh_stag_eks"
     HELM_RELEASE_NAME: "eks-test"
-    HELM_CHART_PATH: "./eks-test"
+    HELM_CHART_PATH: "eks-test"
     IMAGE_TAG:  "latest"
 
 phases:
@@ -55,7 +55,11 @@ phases:
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
       - kubectl get pods -A
       # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=latest --set image.repository=$IMAGE_REPO_NAME
-      - echo Helm upgrade command: helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
+      # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
+      - echo $IMAGE_TAG
+      - echo $HELM_RELEASE_NAME
+      - echo $HELM_CHART_PATH
+      - echo $IMAGE_REPO_NAME
       - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       # testing for ecr pipeline
 
