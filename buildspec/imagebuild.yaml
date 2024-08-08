@@ -7,7 +7,8 @@ env:
     AWS_ACCOUNT_ID: "992382675927"
     EKS_CLUSTER_NAME: "saketh_stag_eks"
     HELM_RELEASE_NAME: "eks-test"
-    HELM_CHART_PATH: "eks-test"
+    HELM_CHART_PATH: "./eks-test"
+    IMAGE_TAG:  "latest"
 
 phases:
   install:
@@ -52,9 +53,10 @@ phases:
       # - docker push $IMAGE_REPO_NAME:latest
       - echo Updating Kubernetes deployment with Helm...
       - aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
-      - aws sts get-caller-identity
       - kubectl get pods -A
-      - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=latest --set image.repository=$IMAGE_REPO_NAME
+      # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=latest --set image.repository=$IMAGE_REPO_NAME
+      - echo Helm upgrade command: helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
+      - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       # testing for ecr pipeline
 
 artifacts:
