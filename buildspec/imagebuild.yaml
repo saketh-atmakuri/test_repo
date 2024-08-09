@@ -48,7 +48,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - sudo aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - docker push $IMAGE_REPO_NAME:$IMAGE_TAG
       - docker push $IMAGE_REPO_NAME:latest
       - echo Updating Kubernetes deployment with Helm...
@@ -56,7 +56,7 @@ phases:
       - kubectl get pods -A
       # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=latest --set image.repository=$IMAGE_REPO_NAME
       # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
-      - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
+      - sudo helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       # testing for ecr pipeline
 
 artifacts:
