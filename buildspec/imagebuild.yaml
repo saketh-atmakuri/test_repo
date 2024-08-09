@@ -57,6 +57,7 @@ phases:
       # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=latest --set image.repository=$IMAGE_REPO_NAME
       # - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
       - helm upgrade --install $HELM_RELEASE_NAME $HELM_CHART_PATH --set image.tag=$IMAGE_TAG --set image.repository=$IMAGE_REPO_NAME
+      - kubectl get all -n default
       # testing for ecr pipeline
 
 artifacts:
