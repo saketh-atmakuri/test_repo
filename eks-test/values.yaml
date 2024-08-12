@@ -3,11 +3,11 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 2
-global:
-  image:
-    repository: ""
-    pullPolicy: IfNotPresent
-    tag: ""
+
+image:
+  repository: ecr
+  pullPolicy: IfNotPresent
+  tag: latest
   
 
 imagePullSecrets: []
@@ -38,7 +38,7 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 80
+  port: 8081
 
 ingress:
   enabled: false
